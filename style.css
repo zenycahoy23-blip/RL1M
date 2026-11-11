@@ -1,0 +1,429 @@
+ * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --env-width: min(88vw, clamp(280px, 45vw, 560px));
+            --env-height: calc(var(--env-width) * 0.72);
+        }
+
+        body {
+            font-family: 'Poppins', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #FBC02D 0%, #F9A825 20%, #FDD835 40%, #FBC02D 60%, #F9A825 80%, #FBC02D 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: clamp(12px, 3vh, 32px);
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            perspective: 1200px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 680px;
+            margin: auto;
+        }
+
+        .title {
+            color: #212121;
+            font-size: clamp(20px, 3.2vw, 36px);
+            margin-bottom: clamp(16px, 3.5vh, 32px);
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.6);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            animation: float 3s ease-in-out infinite, titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 0 2px 10px rgba(255, 255, 255, 0.6); }
+            50% { text-shadow: 0 4px 20px rgba(255, 255, 255, 0.9); }
+        }
+
+        /* Envelope Container */
+        .envelope-wrapper {
+            position: relative;
+            width: min(560px, 92vw);
+            height: clamp(380px, 60vh, 480px);
+            margin-bottom: 30px;
+        }
+
+        .envelope {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            /* Darker contrast shadow to make lighter envelope POP */
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.22)) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+            transition: filter 0.5s ease;
+        }
+
+        /* Front Side / Sealed Envelope Structure */
+        .envelope-front {
+            width: 100%;
+            height: 100%;
+            /* Warm, classic bright normal yellow gradient */
+            background: linear-gradient(135deg, #FFF176 0%, #FFEE58 50%, #FDD835 100%);
+            border: 2px solid #FBC02D;
+            position: relative;
+            box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.8), 0 12px 35px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transform-origin: bottom center;
+            transition: all 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-radius: 14px;
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        .envelope-front::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.5) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(245, 124, 0, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .envelope-front:hover {
+            box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.9), 0 18px 45px rgba(0, 0, 0, 0.25);
+            transform: translateY(-6px);
+        }
+
+        .envelope.opened .envelope-front {
+            transform: rotateX(-160deg) scale(0.95);
+            opacity: 0;
+            pointer-events: none;
+            filter: blur(4px);
+        }
+
+        /* Top Flap scaled proportionally to vertical envelope height */
+        .flap {
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to bottom, #FFF59D 0%, #FFEE58 60%, #FDD835 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            border-bottom: 2px solid #FBC02D;
+            transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform-origin: top center;
+            z-index: 6;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.12));
+        }
+
+        .flap::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6) 0%, transparent 80%);
+            pointer-events: none;
+        }
+
+        .envelope-front:hover .flap {
+            transform: rotateX(-20deg);
+        }
+
+        .envelope.opened .flap {
+            transform: rotateX(-180deg);
+        }
+
+        .body {
+            padding: 38% 35px 35px 35px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 4;
+        }
+
+        .card-decoration {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            position: absolute;
+            top: 18%;
+            left: 0;
+            right: 0;
+            z-index: 7;
+            animation: glow 2.5s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 2px 4px rgba(249, 168, 37, 0.3)); }
+            50% { filter: drop-shadow(0 4px 12px rgba(249, 168, 37, 0.6)); }
+        }
+
+        .heart {
+            font-size: 28px;
+            animation: beat 1.4s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        .heart-1 { animation-delay: 0s; }
+        .heart-2 { animation-delay: 0.2s; }
+        .heart-3 { animation-delay: 0.4s; }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.22); }
+            50% { transform: scale(1); }
+        }
+
+        .card-message {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .greeting {
+            font-size: 26px;
+            font-weight: 800;
+            color: #212121;
+            margin: 0;
+            letter-spacing: 0.3px;
+        }
+
+        .subtext {
+            font-size: 14px;
+            color: #616161;
+            margin: 0;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        /* Letter Inside (Card Styling) - Taller format for rich reading */
+        .card {
+            width: 100%;
+            height: 100%;
+            /* Soft cream paper background for nice contrast when opened */
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFFDE7 60%, #FFF9C4 100%);
+            border: 2px solid #FBC02D;
+            padding: 40px 35px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(30px) scale(0.9) rotateX(90deg);
+            transition: all 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22), inset 0 0 15px rgba(255, 255, 255, 0.8);
+            overflow-y: auto;
+            border-radius: 14px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .envelope.opened .card {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1) rotateX(0deg);
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #FBC02D;
+            padding-bottom: 15px;
+        }
+
+        .card-header h2 {
+            color: #1A1A1A;
+            font-size: 28px;
+            margin-bottom: 6px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .date {
+            color: #757575;
+            font-size: 12px;
+            margin: 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-content {
+            line-height: 1.85;
+            color: #333333;
+            font-size: 15px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .card-content p {
+            margin-bottom: 14px;
+            font-weight: 400;
+        }
+
+        .card-content p.highlight {
+            font-size: 17px;
+            font-weight: 700;
+            color: #F57F17;
+            text-align: center;
+        }
+
+        .signature {
+            text-align: center;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .signature p {
+            margin: 2px 0;
+        }
+
+        .name {
+            font-weight: 700;
+            color: #1A1A1A;
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .card-footer {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid #E0E0E0;
+            color: #616161;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* Action Buttons */
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background: #FFFFFF;
+            color: #1A1A1A;
+            border: 2px solid #FFF176;
+            padding: 12px 32px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12), 0 2px 5px rgba(0, 0, 0, 0.08);
+            letter-spacing: 0.5px;
+            outline: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18), 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: #FFFDE7;
+            border-color: #FBC02D;
+        }
+
+        .btn:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        /* Responsive Adjustments for Short Laptops & Mobile */
+        @media (max-height: 720px) {
+            .envelope-wrapper {
+                height: clamp(340px, 52vh, 420px);
+            }
+            .title {
+                font-size: 26px;
+                margin-bottom: 15px;
+            }
+            .card {
+                padding: 25px 25px;
+            }
+            .card-header h2 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .title {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+            .envelope-wrapper {
+                width: 92vw;
+                height: 420px;
+            }
+
+            .body {
+                padding: 35% 20px 20px 20px;
+            }
+
+            .greeting {
+                font-size: 22px;
+            }
+
+            .card {
+                padding: 25px 20px;
+            }
+
+            .card-header h2 {
+                font-size: 22px;
+            }
+
+            .card-content {
+                font-size: 13px;
+            }
+
+            .btn {
+                padding: 10px 24px;
+                font-size: 14px;
+            }
+        }
